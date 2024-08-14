@@ -92,8 +92,8 @@ pfetch
 # export ARCHFLAGS="-arch x86_64"
 # export PATH=$PATH:/opt/riscv/bin
 # export FREERTOS_KERNEL_PATH=/home/freire/FreeRTOS-Kernel
-export PICO_SDK_PATH=/home/freire/pico-sdk
-export LD_LIBRARY_PATH=/opt/SEGGER/JLink:$LD_LIBRARY_PATH
+#export PICO_SDK_PATH=/home/freire/pico-sdk
+#export LD_LIBRARY_PATH=/opt/SEGGER/JLink:$LD_LIBRARY_PATH
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
