@@ -1,5 +1,5 @@
-import = [
-    "~/.config/alacritty/alacritty-theme/themes/gruvbox_dark.toml"
+general.import = [
+    "~/.config/alacritty/alacritty-theme/themes/citylights.toml"
 ]
 
 [window]
