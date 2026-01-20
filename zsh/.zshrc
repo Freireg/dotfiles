@@ -73,7 +73,7 @@ ZSH_THEME="sonicradish"
 plugins=(git)
 
 source $ZSH/oh-my-zsh.sh
-pfetch
+#pfetch
 # User configuration
 
 # export MANPATH="/usr/local/man:$MANPATH"
