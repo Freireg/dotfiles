@@ -1,3 +1,6 @@
+import = [
+    "~/.config/alacritty/alacritty-theme/themes/everforest_dark.toml"
+]
 
 [window]
 padding = { x = 15, y = 15 }
@@ -6,8 +9,3 @@ opacity = 0.85
 
 [font]
 normal = { family = "FiraCode Nerd Font Mono", style = "Medium" }
-
-[general]
-import = [
-    "~/.config/alacritty/alacritty-theme/themes/everforest_dark.toml"
-]
