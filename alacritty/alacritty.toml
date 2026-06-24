@@ -11,3 +11,13 @@ normal = { family = "FiraCode Nerd Font", style = "Medium" }
 import = [
     "~/.config/alacritty/alacritty-theme/themes/gruvbox_dark.toml"
 ]
+
+[[keyboard.bindings]]
+key = "Return"
+mods = "Shift"
+chars = "\u001B\r"
+
+[[keyboard.bindings]]
+key = "m"
+mods = "Control | Alt"
+action = "Minimize"
