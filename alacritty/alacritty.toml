@@ -1,11 +1,23 @@
-import = [
-    "~/.config/alacritty/alacritty-theme/themes/gruvbox_dark.toml"
-]
 
 [window]
-padding = { x = 15, y = 15 }
+padding = { x = 1, y = 5 }
 decorations = "None"
 opacity = 0.85
 
 [font]
-normal = { family = "FiraCode Nerd Font Mono", style = "Medium" }
+normal = { family = "FiraCode Nerd Font", style = "Medium" }
+
+[general]
+import = [
+    "~/.config/alacritty/alacritty-theme/themes/gruvbox_dark.toml"
+]
+
+[[keyboard.bindings]]
+key = "Return"
+mods = "Shift"
+chars = "\u001B\r"
+
+[[keyboard.bindings]]
+key = "m"
+mods = "Control | Alt"
+action = "Minimize"

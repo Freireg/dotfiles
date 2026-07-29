@@ -102,4 +102,5 @@ pfetch
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-
+export PATH=$PATH:/home/guilherme-almeida/.local/bin
+eval "$(oh-my-posh init zsh --config slim)"
