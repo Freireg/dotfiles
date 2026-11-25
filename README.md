@@ -16,3 +16,9 @@ To use these dotfiles, follow these steps:
 Each application config has it's own usability and installation process.
 
 Feel free to explore and modify these dotfiles to suit your preferences.
+
+## Configs
+
+- [herdr](herdr/README.md): herdr workspace config, GitHub PR watchlist in the tab bar, plugins
+- [nvim](nvim/README.md): VSCode-like Neovim
+- [zsh](zsh/README.md): zsh + oh-my-zsh

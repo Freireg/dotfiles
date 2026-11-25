@@ -1,0 +1,31 @@
+# herdr-usage configuration
+
+[refresh]
+interval_secs = 300
+min_interval_secs = 60
+
+[display]
+bar_set = "dots"
+bar_cells = 10
+gauges = ["5h", "wk"]
+show_model = true
+show_icon = true
+icon_set = "geometric"
+settings_key = "prefix+u"
+show_plan = false
+show_burn = true
+show_resets_in = false
+show_credits = false
+show_cost = false
+show_scoped = false
+
+[thresholds]
+warn = 70
+crit = 90
+stale_multiplier = 3
+
+[providers.codex]
+enabled = true
+
+[providers.claude]
+enabled = true
