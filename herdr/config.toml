@@ -63,3 +63,11 @@ command = "~/.config/herdr/scripts/gh-prs.py list"
 description = "GitHub PR watchlist"
 width = "90%"
 height = "85%"
+
+[[keys.command]]
+key = "prefix+shift+j"
+type = "popup"
+command = "~/.config/herdr/scripts/jira-tickets.py"
+description = "Jira sprint tickets -> workspace"
+width = "90%"
+height = "70%"
