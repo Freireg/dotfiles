@@ -62,10 +62,10 @@ def creds() -> dict:
     return d
 
 
-def api(c: dict, method: str, path: str, body: dict | None = None):
+def _request(c: dict, base: str, method: str, path: str, body: dict | None = None):
     auth = base64.b64encode(f"{c['JIRA_EMAIL']}:{c['JIRA_API_TOKEN']}".encode()).decode()
     req = urllib.request.Request(
-        c["JIRA_URL"] + path,
+        base + path,
         method=method,
         data=json.dumps(body).encode() if body is not None else None,
         headers={"Authorization": f"Basic {auth}", "Accept": "application/json", "Content-Type": "application/json"},
@@ -76,6 +76,67 @@ def api(c: dict, method: str, path: str, body: dict | None = None):
     except urllib.error.HTTPError as e:
         msg = e.read().decode(errors="replace")[:300]
         raise RuntimeError(f"Jira {method} {path}: HTTP {e.code} {msg}") from None
+
+
+def api_base(c: dict) -> str:
+    """Pick the REST base URL that actually authenticates this token.
+
+    Classic API tokens work on the site URL. Scoped API tokens are rejected there
+    (and Jira then answers searches as an anonymous user: 200 with 0 issues!), and
+    only work via https://api.atlassian.com/ex/jira/<cloudId>. Probe /myself on
+    each and cache the winner.
+    """
+    if c.get("_base"):
+        return c["_base"]
+    cache = os.path.join(CACHE_DIR, "api-base")
+    key = f"{c['JIRA_URL']}|{c['JIRA_EMAIL']}|{c['JIRA_API_TOKEN'][-8:]}"
+    try:
+        with open(cache) as f:
+            k, base = f.read().split("\n", 1)
+        if k == key and base.strip():
+            c["_base"] = base.strip()
+            return c["_base"]
+    except (OSError, ValueError):
+        pass
+    candidates = []
+    if c.get("JIRA_CLOUD_ID"):
+        candidates.append(f"https://api.atlassian.com/ex/jira/{c['JIRA_CLOUD_ID']}")
+    candidates.append(c["JIRA_URL"])
+    if not c.get("JIRA_CLOUD_ID") and c["JIRA_URL"].endswith(".atlassian.net"):
+        try:
+            with urllib.request.urlopen(c["JIRA_URL"] + "/_edge/tenant_info", timeout=10) as r:
+                candidates.append(f"https://api.atlassian.com/ex/jira/{json.load(r)['cloudId']}")
+        except Exception:  # noqa: BLE001
+            pass
+    errors = []
+    for base in candidates:
+        try:
+            # Anonymous searches also return 200 (with 0 hits), so require a hit or a working /myself.
+            r = _request(c, base, "POST", "/rest/api/3/search/jql",
+                         {"jql": "assignee = currentUser()", "fields": ["summary"], "maxResults": 1})
+            if r.get("issues"):
+                ok = True
+            else:
+                try:
+                    _request(c, base, "GET", "/rest/api/3/myself")
+                    ok = True
+                except RuntimeError:
+                    ok = False
+            if ok:
+                os.makedirs(CACHE_DIR, exist_ok=True)
+                with open(cache, "w") as f:
+                    f.write(f"{key}\n{base}")
+                c["_base"] = base
+                return base
+            errors.append(f"{base}: not authenticated")
+        except RuntimeError as e:
+            errors.append(str(e)[:160])
+    raise RuntimeError("Jira authentication failed (check JIRA_EMAIL / JIRA_API_TOKEN; scoped tokens "
+                       "need read:jira-work):\n  " + "\n  ".join(errors))
+
+
+def api(c: dict, method: str, path: str, body: dict | None = None):
+    return _request(c, api_base(c), method, path, body)
 
 
 def sprint_field(c: dict) -> str | None:
@@ -92,8 +153,9 @@ def sprint_field(c: dict) -> str | None:
             fid = fld["id"]
             break
     os.makedirs(CACHE_DIR, exist_ok=True)
-    with open(path, "w") as f:
-        f.write(fid or "")
+    if fid:  # don't cache a miss; it may come from a permission problem
+        with open(path, "w") as f:
+            f.write(fid)
     return fid
 
 

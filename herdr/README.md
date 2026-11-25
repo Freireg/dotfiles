@@ -20,7 +20,7 @@ What's in here:
 - `python3` ≥ 3.9 (stdlib only)
 - [GitHub CLI](https://cli.github.com/) `gh`, logged in: `gh auth login`
 - `xdg-open` (to open PRs from the popup)
-- Jira Cloud API token (create one at https://id.atlassian.com/manage-profile/security/api-tokens). **Never commit it**; it lives outside the repo
+- Jira Cloud API token (create one at https://id.atlassian.com/manage-profile/security/api-tokens). **Never commit it**; it lives outside the repo. Classic and scoped tokens both work; a scoped token needs at least `read:jira-work` (+ `read:jira-user` recommended). Scoped tokens only work through `api.atlassian.com/ex/jira/<cloudId>`, which the script detects automatically
 - A Nerd Font / terminal with Unicode support for the status glyphs
 - Plugins used by the config:
   - [herdr-usage](https://github.com/EdTheBearded/herdr-usage): agent usage gauges in the sidebar (`prefix+u`)
